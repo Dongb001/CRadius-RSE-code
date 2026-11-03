@@ -1,0 +1,42 @@
+{
+  "rir_root": "data/rirs/simulated",
+  "speech_dir": "data/speech/val",
+  "noise_dir": "data/noise/val",
+  "duration": 4.5,
+  "sample_rate": 16000,
+  "distance_bins_m": [
+    [
+      0.0,
+      1.0
+    ],
+    [
+      1.0,
+      2.0
+    ],
+    [
+      2.0,
+      3.0
+    ],
+    [
+      3.0,
+      4.0
+    ],
+    [
+      4.0,
+      null
+    ]
+  ],
+  "noise_probability": 0.5,
+  "noise_snr_min": 0.0,
+  "noise_snr_max": 15.0,
+  "speech_rms_target": 0.05,
+  "source_gain_db_min": -9.0,
+  "source_gain_db_max": 9.0,
+  "doubletalk_gain_mode": "distance_symmetric",
+  "doubletalk_gain_diff_db_min": 0.0,
+  "doubletalk_gain_diff_db_max": 6.0,
+  "doubletalk_gain_reverse_probability": 0.5,
+  "peak_scale": 0.98,
+  "min_speech_rms": 0.0001,
+  "noise_only_rms_target": 0.05
+}

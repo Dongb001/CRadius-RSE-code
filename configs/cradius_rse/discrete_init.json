@@ -1,0 +1,428 @@
+{
+  "description": "Stage 1: discrete-radius (one-hot) network trained without CRC; its weights initialize the backbone of the radius-conditioned models.",
+  "model": "cradius_rse.models.ContinuousRadiusExtractionNetwork",
+  "model_args": {
+    "radius_encoding": "discrete",
+    "discrete_radii_m": [
+      1.0,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "n_fft": 192,
+    "hop_length": 128,
+    "num_tf_blocks": 6,
+    "feature_dim": 32,
+    "lstm_hidden_dim": 64,
+    "condition_dim": 4,
+    "norm_window_frames": 250,
+    "norm_eps": 1e-08
+  },
+  "training_args": {
+    "loss": "cradius_rse.losses.RegionalExtractionLoss",
+    "loss_args": {
+      "zero_target_weight": 100,
+      "eps": 1e-08,
+      "zero_target_threshold": 1e-07,
+      "max_loss": 40.0,
+      "straight_through_clip": true
+    },
+    "optimizer": "torch.optim.Adam",
+    "optimizer_args": {
+      "lr": 0.0006
+    },
+    "scheduler": "torch.optim.lr_scheduler.ReduceLROnPlateau",
+    "scheduler_args": {
+      "mode": "min",
+      "patience": 3,
+      "factor": 0.5,
+      "min_lr": 1e-06
+    },
+    "warmup_steps": 2000,
+    "grad_clip": 1.0,
+    "metrics": [
+      "snr_i",
+      "si_snr_i",
+      "si_sdr_i"
+    ],
+    "init_checkpoint": null,
+    "init_checkpoint_skip_prefixes": [],
+    "monitor": "val/loss",
+    "monitor_mode": "min",
+    "data_parallel": false,
+    "sample_rate": 16000,
+    "logged_samples_per_count": 5
+  },
+  "train_dataset": "cradius_rse.data.RegionalMixtureDataset",
+  "train_dataset_args": {
+    "rir_root": "data/rirs/simulated",
+    "speech_dir": "data/speech/train",
+    "noise_dir": "data/noise/train",
+    "base_mixtures_per_epoch": 19200,
+    "duration": 4.5,
+    "sample_rate": 16000,
+    "query_radii": [
+      1.0,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "distance_bins_m": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        2.0
+      ],
+      [
+        2.0,
+        3.0
+      ],
+      [
+        3.0,
+        4.0
+      ],
+      [
+        4.0,
+        null
+      ]
+    ],
+    "noise_probability": 0.5,
+    "noise_snr_min": 0.0,
+    "noise_snr_max": 15.0,
+    "speech_rms_target": 0.05,
+    "source_gain_db_min": -9.0,
+    "source_gain_db_max": 9.0,
+    "peak_scale": 0.98,
+    "min_speech_rms": 0.0001,
+    "noise_only_rms_target": 0.05,
+    "source_profiles": [
+      {
+        "source_count": 0,
+        "distance_bin_ids": []
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          0
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          0
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          1
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          2
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          3
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          4
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          1
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          1
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          2
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          2,
+          2
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          3
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          3
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          4
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          4,
+          4
+        ]
+      }
+    ],
+    "seed": 20260808
+  },
+  "val_dataset": "cradius_rse.data.RegionalMixtureDataset",
+  "val_dataset_args": {
+    "rir_root": "data/rirs/simulated",
+    "speech_dir": "data/speech/val",
+    "noise_dir": "data/noise/val",
+    "base_mixtures_per_epoch": 1200,
+    "duration": 4.5,
+    "sample_rate": 16000,
+    "query_radii": [
+      1.0,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "distance_bins_m": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        2.0
+      ],
+      [
+        2.0,
+        3.0
+      ],
+      [
+        3.0,
+        4.0
+      ],
+      [
+        4.0,
+        null
+      ]
+    ],
+    "noise_probability": 0.5,
+    "noise_snr_min": 0.0,
+    "noise_snr_max": 15.0,
+    "speech_rms_target": 0.05,
+    "source_gain_db_min": -9.0,
+    "source_gain_db_max": 9.0,
+    "peak_scale": 0.98,
+    "min_speech_rms": 0.0001,
+    "noise_only_rms_target": 0.05,
+    "source_profiles": [
+      {
+        "source_count": 0,
+        "distance_bin_ids": []
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          0
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          0
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          1
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          2
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          3
+        ]
+      },
+      {
+        "source_count": 1,
+        "distance_bin_ids": [
+          4
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          0
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          1
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          1
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          2
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          2,
+          2
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          3
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          3
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          0,
+          4
+        ]
+      },
+      {
+        "source_count": 2,
+        "distance_bin_ids": [
+          4,
+          4
+        ]
+      }
+    ],
+    "seed": 20260808
+  },
+  "epochs": 50,
+  "batch_size": 1,
+  "eval_batch_size": 1,
+  "num_workers": 8,
+  "train_shuffle": false,
+  "early_stopping": {
+    "enabled": true,
+    "metric": "val/loss",
+    "mode": "min",
+    "patience": 10,
+    "min_delta": 0.0001
+  }
+}

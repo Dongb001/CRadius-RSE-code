@@ -1,0 +1,11 @@
+torch>=2.0
+numpy>=1.23
+scipy>=1.10
+soundfile>=0.12
+torchmetrics>=0.11
+asteroid-filterbanks>=0.4
+tqdm
+pytest
+# optional: Weights & Biases logging (train.py --wandb)
+# wandb
+# RIR simulation (data_preparation/simulate_rirs.py): https://github.com/DavidDiazGuerra/gpuRIR
